@@ -1,0 +1,17 @@
+[project]
+name = "hermes-napcat-platform"
+version = "0.1.0"
+description = "Hermes gateway platform plugin for NapCat and OneBot v11"
+readme = "README.md"
+authors = [
+    { name = "ByteColtX", email = "umk@live.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+hermes-napcat-platform = "hermes_napcat_platform:main"
+
+[build-system]
+requires = ["uv_build>=0.11.13,<0.12.0"]
+build-backend = "uv_build"
