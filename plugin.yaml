@@ -1,0 +1,31 @@
+name: hermes-platform-napcat
+label: NapCat
+kind: platform
+version: 0.1.0
+description: >
+  Discovery-only Hermes platform plugin skeleton for QQ via NapCat OneBot v11.
+author: ByteColtX
+
+requires_env:
+  - name: NAPCAT_WS_URL
+    description: "Reserved for the future NapCat OneBot v11 WebSocket URL, e.g. ws://127.0.0.1:3001"
+    prompt: "NapCat WebSocket URL"
+    password: false
+  - name: NAPCAT_ACCESS_TOKEN
+    description: "Reserved for the future NapCat / OneBot access token"
+    prompt: "NapCat access token"
+    password: true
+
+optional_env:
+  - name: NAPCAT_HOME_CHANNEL
+    description: "Reserved for the future default QQ target for cron / notification delivery, e.g. group:123456789"
+    prompt: "NapCat home channel"
+    password: false
+  - name: NAPCAT_ALLOWED_USERS
+    description: "Reserved for the future comma-separated QQ user IDs allowed to use Hermes"
+    prompt: "Allowed QQ users"
+    password: false
+  - name: NAPCAT_ALLOW_ALL_USERS
+    description: "Reserved for the future option to allow every QQ user to use Hermes"
+    prompt: "Allow all QQ users? (true/false)"
+    password: false

@@ -1,7 +1,7 @@
 [project]
-name = "hermes-napcat-platform"
+name = "hermes-platform-napcat"
 version = "0.1.0"
-description = "Hermes gateway platform plugin for NapCat and OneBot v11"
+description = "Discovery-only Hermes platform plugin skeleton for NapCat and OneBot v11"
 readme = "README.md"
 authors = [
     { name = "ByteColtX", email = "umk@live.com" }
@@ -9,8 +9,69 @@ authors = [
 requires-python = ">=3.11"
 dependencies = []
 
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.8.0",
+]
+
 [project.scripts]
-hermes-napcat-platform = "hermes_napcat_platform:main"
+hermes-platform-napcat = "napcat_platform:main"
+
+[project.entry-points."hermes_agent.plugins"]
+hermes-platform-napcat = "napcat_platform"
+
+[tool.uv.build-backend]
+module-name = "napcat_platform"
+module-root = ""
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["napcat_platform", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "ANN",
+    "D",
+    "E",
+    "F",
+    "I",
+    "UP",
+]
+ignore = [
+    "D100",
+    "D104",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["napcat_platform"]
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-config",
+    "--strict-markers",
+]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["napcat_platform"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
 
 [build-system]
 requires = ["uv_build>=0.11.13,<0.12.0"]

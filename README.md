@@ -1,24 +1,99 @@
-# hermes-napcat-platform
+# hermes-platform-napcat
 
-`hermes-napcat-platform` 是一个 Hermes gateway platform 插件，用于通过 NapCat 的 OneBot v11 接口接入 QQ 账号。
+Hermes Agent 的 NapCat / OneBot v11 社区平台插件
 
-这个项目的目标是用 Hermes 原生的 platform + toolset 设计，替代 `nanobot-channel-anon` 中依赖上下文格式化的妥协方案：
+## 安装方式
 
-- 通过 NapCat 接收 QQ 私聊、群聊和 Notice 事件
-- 暴露 QQ 专用能力为 `hermes-napcat` toolset
-- 让 Agent 通过结构化工具使用 @、引用回复、表情回应、媒体发送和群管操作
-- 将 OneBot message_id、QQ 号和路由细节保留在 adapter/tool 层，而不是塞进主聊天上下文
+### 官方方式：Hermes 插件安装
 
-## 初始范围
+Hermes 官方插件系统会从 `~/.hermes/plugins/<name>/plugin.yaml` 和 `__init__.py` 发现目录插件。第三方插件默认只发现不加载，需要加入 `plugins.enabled`，或安装时使用 `--enable`。
 
-- NapCat WebSocket platform adapter
-- 最近事件索引，用于解析用户和消息
-- 回复准备工具，用于设置 @ 和引用回复
-- 基于 NapCat HTTP API 的受保护群管工具
+```bash
+hermes plugins install ByteColtX/hermes-platform-napcat --enable
+hermes plugins list
+```
 
-## 开发
+如果不想立即启用：
+
+```bash
+hermes plugins install ByteColtX/hermes-platform-napcat --no-enable
+hermes plugins enable hermes-platform-napcat
+```
+
+### 其他安装方式
+
+本地开发目录安装：
+
+```bash
+mkdir -p ~/.hermes/plugins
+ln -s "$(pwd)" ~/.hermes/plugins/hermes-platform-napcat
+hermes plugins enable hermes-platform-napcat
+```
+
+项目级插件安装，仅用于可信仓库：
+
+```bash
+mkdir -p .hermes/plugins
+ln -s "$(pwd)" .hermes/plugins/hermes-platform-napcat
+HERMES_ENABLE_PROJECT_PLUGINS=true hermes plugins list
+```
+
+pip / uv 开发安装会通过 `hermes_agent.plugins` 入口点被 Hermes 发现：
 
 ```bash
 uv sync
-uv run hermes-napcat-platform
+uv pip install -e .
+hermes plugins enable hermes-platform-napcat
+```
+
+## 配置方式
+
+### 启用插件
+
+`~/.hermes/config.yaml`:
+
+```yaml
+plugins:
+  enabled:
+    - hermes-platform-napcat
+```
+
+### NapCat 平台配置预留
+
+以下配置面向后续适配器实现阶段。M0 骨架不会读取或连接这些值。
+
+在 `~/.hermes/config.yaml` 中启用平台：
+
+```yaml
+gateway:
+  platforms:
+    napcat:
+      enabled: true
+      extra:
+        ws_url: ws://127.0.0.1:3001
+        http_url: http://127.0.0.1:3000
+        access_token: your_access_token
+        home_channel: group:123456789
+```
+
+`~/.hermes/.env`:
+
+```dotenv
+NAPCAT_WS_URL=ws://127.0.0.1:3001
+NAPCAT_HTTP_URL=http://127.0.0.1:3000
+NAPCAT_ACCESS_TOKEN=your_access_token
+NAPCAT_HOME_CHANNEL=group:123456789
+NAPCAT_ALLOWED_USERS=123456789,987654321
+NAPCAT_ALLOW_ALL_USERS=false
+```
+
+Shell 环境变量：
+
+```bash
+export NAPCAT_WS_URL="ws://127.0.0.1:3001"
+export NAPCAT_HTTP_URL="http://127.0.0.1:3000"
+export NAPCAT_ACCESS_TOKEN="your_access_token"
+export NAPCAT_HOME_CHANNEL="group:123456789"
+export NAPCAT_ALLOWED_USERS="123456789,987654321"
+export NAPCAT_ALLOW_ALL_USERS="false"
 ```
